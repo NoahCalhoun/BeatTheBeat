@@ -17,13 +17,12 @@ public class BBWorldMgr : MonoBehaviour
     public Transform BackgroundRoot;
 
     public float Speed = 1000f;
-
-    // Use this for initialization
+    
     void Start ()
     {
         if (Canvas)
         {
-            float scaleFactor = (Canvas.transform as RectTransform).rect.height / 720f;
+            float scaleFactor = (Canvas.transform as RectTransform).rect.width / 1348f;
 
             Canvas.GetComponent<CanvasScaler>().scaleFactor = scaleFactor;
             Height = Canvas.pixelRect.height / scaleFactor;
@@ -36,7 +35,6 @@ public class BBWorldMgr : MonoBehaviour
 
     }
 	
-	// Update is called once per frame
 	void Update ()
     {
     }
