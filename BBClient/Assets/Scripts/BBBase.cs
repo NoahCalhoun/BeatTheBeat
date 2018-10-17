@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class BBBase : MonoBehaviour
 {
@@ -12,4 +13,8 @@ public class BBBase : MonoBehaviour
 
     private GameObject mGo;
     public GameObject Go { get { if (mGo == null) mGo = gameObject; return mGo; } }
+
+
+    private Image mImg;
+    public Image Img { get { if (mImg == null) mImg = GetComponent<Image>(); return mImg; } }
 }

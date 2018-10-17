@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,8 +11,8 @@ public class BBWorldMgr : MonoBehaviour
 
     public Canvas Canvas;
 
-    public float Height { get { return Canvas ? Canvas.pixelRect.height : 0f; } }
-    public float Width { get { return Canvas ? Canvas.pixelRect.width : 0f; } }
+    public float Height { get; private set; }
+    public float Width { get; private set; }
 
     public Transform BackgroundRoot;
 
@@ -20,6 +21,15 @@ public class BBWorldMgr : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        if (Canvas)
+        {
+            float scaleFactor = (Canvas.transform as RectTransform).rect.height / 720f;
+
+            Canvas.GetComponent<CanvasScaler>().scaleFactor = scaleFactor;
+            Height = Canvas.pixelRect.height / scaleFactor;
+            Width = Canvas.pixelRect.width / scaleFactor;
+        }
+
         var wallPref = Resources.Load<GameObject>("Prefabs/Wall");
         var wallObj = Instantiate(wallPref);
         wallObj.GetComponent<BBBase>().Tm.SetParent(BackgroundRoot, false);
