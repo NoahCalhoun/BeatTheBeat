@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class BBWorldMgr : MonoBehaviour
 {
     static private BBWorldMgr mInstance;
-    static public BBWorldMgr Instance { get { if (mInstance == null) mInstance = GameObject.FindGameObjectWithTag("WorldRoot").GetComponent<BBWorldMgr>(); return mInstance;  } }
+    static public BBWorldMgr Instance { get { if (mInstance == null) mInstance = GameObject.FindGameObjectWithTag("GameManager").GetComponent<BBWorldMgr>(); return mInstance;  } }
 
     public Canvas Canvas;
 
