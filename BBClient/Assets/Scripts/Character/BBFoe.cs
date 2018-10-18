@@ -8,6 +8,11 @@ public class BBFoe : BBCharacter
     public FoeType Type { get; private set; }
     private Queue<BeatType> BeatQueue;
 
+    public BeatType CurrentBeat { get { return BeatQueue != null && BeatQueue.Count > 0 ? BeatQueue.Peek() : BeatType.Anybeat; } }
+
+    public float FrontDist = 160f;
+    public BBFoe FrontFoe;
+
 	void Start ()
     {
 		
@@ -15,10 +20,11 @@ public class BBFoe : BBCharacter
 	
 	void Update ()
     {
-
+        if (FrontFoe)
+            Rt.localPosition = FrontFoe.Rt.localPosition + new Vector3(FrontDist, 0f);
     }
 
-    public void InitFoe(ref FoePreset preset)
+    public void InitFoe(FoePreset preset)
     {
         Type = preset.Type;
 
