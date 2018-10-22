@@ -10,8 +10,9 @@ public class BBFoe : BBCharacter
 
     public BeatType CurrentBeat { get { return BeatQueue != null && BeatQueue.Count > 0 ? BeatQueue.Peek() : BeatType.Anybeat; } }
 
-    public float FrontDist = 160f;
+    public float FrontDist = 3f;
     public BBFoe FrontFoe;
+    public bool PositionUpdated = false;
 
 	void Start ()
     {
@@ -20,8 +21,7 @@ public class BBFoe : BBCharacter
 	
 	void Update ()
     {
-        if (FrontFoe)
-            Rt.localPosition = FrontFoe.Rt.localPosition + new Vector3(FrontDist, 0f);
+        UpdatePositionByFrontFoe();
     }
 
     public void InitFoe(FoePreset preset)
@@ -33,6 +33,21 @@ public class BBFoe : BBCharacter
         {
             BeatQueue.Enqueue(preset.Beats[i]);
         }
+    }
+
+    void UpdatePositionByFrontFoe()
+    {
+        if (FrontFoe == null)
+            return;
+
+        if (FrontFoe.PositionUpdated == false)
+        {
+            PositionUpdated = false;
+            return;
+        }
+        
+        Tm.localPosition = FrontFoe.Tm.localPosition + new Vector3(FrontDist, 0f);
+        PositionUpdated = true;
     }
 
     public BeatResult OnBeat(BeatType type)
@@ -65,17 +80,17 @@ public class BBFoe : BBCharacter
         return type == BeatType.Anybeat || type == BeatQueue.Peek();
     }
 
-    public BeatResult OnFailed()
+    private BeatResult OnFailed()
     {
         return BeatResult.Failed;
     }
 
-    public BeatResult OnSucceed()
+    private BeatResult OnSucceed()
     {
         return BeatResult.Succeed;
     }
 
-    public BeatResult OnDefeat()
+    private BeatResult OnDefeat()
     {
         return BeatResult.Defeat;
     }

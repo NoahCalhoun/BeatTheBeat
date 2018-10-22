@@ -70,5 +70,4 @@ public struct FoePreset
 
 public static class BBDefine
 {
-
 }

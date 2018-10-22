@@ -1,17 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class BBUI : BBBase
 {
-	void Start ()
-    {
-		
-	}
-	
-	void Update ()
-    {
-		
-	}
+    private RectTransform mRt;
+    public RectTransform Rt { get { if (mRt == null) mRt = transform as RectTransform; return mRt; } }
+
+
+    private Image mImg;
+    public Image Img { get { if (mImg == null) mImg = GetComponent<Image>(); return mImg; } }
 }

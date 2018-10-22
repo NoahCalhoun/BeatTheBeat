@@ -9,8 +9,15 @@ public class BBFarback : BBPassThrough
 
     void Start ()
     {
-        Material = GetComponent<Image>().material;
-        SpeedRate = 1f / Rt.rect.width * Material.mainTextureScale.x / Rt.localScale.x;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+
+        Material = spriteRenderer.sharedMaterial;
+        float speedFactor = Material.mainTextureScale.x / (Tm.localScale.x * Mathf.Abs(spriteRenderer.sprite.vertices[0].x) * 2);
+        SpeedRate = 0.2f * speedFactor;
+
+        //SpeedRate = spriteRenderer.sprite.rect.width * Material.mainTextureScale.x / (Tm.localScale.x * spriteRenderer.size.x);
+        //Material = GetComponent<Image>().material;
+        //SpeedRate = 1f;// / Rt.rect.width * Material.mainTextureScale.x / Rt.localScale.x;
     }
 
     protected override void GoThrough()

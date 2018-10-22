@@ -7,8 +7,11 @@ public class BBStreet : BBPassThrough
 
     void Start()
     {
-        Material = GetComponent<Image>().material;
-        SpeedRate = 1f / Rt.rect.width * Material.mainTextureScale.x / Rt.localScale.x;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+
+        Material = spriteRenderer.sharedMaterial;
+        float speedFactor = Material.mainTextureScale.x / (Tm.localScale.x * Mathf.Abs(spriteRenderer.sprite.vertices[0].x) * 2);
+        SpeedRate = speedFactor;
     }
 
     protected override void GoThrough()

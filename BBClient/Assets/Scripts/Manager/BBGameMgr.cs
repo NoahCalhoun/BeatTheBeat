@@ -11,32 +11,15 @@ public class BBGameMgr : MonoBehaviour
 
     public Queue<BBFoe> FoeQueue = new Queue<BBFoe>();
 
-    public Dictionary<FoeType, FoePreset> FoeDic = new Dictionary<FoeType, FoePreset>(EnumComparer<FoeType>.Instance);
-
     public BBFoe HeadFoe { get { return FoeQueue.Count > 0 ? FoeQueue.Peek() : null; } }
-
-    public BBFoe TailFoe;
-
-    public Transform FoeRoot;
+    private BBFoe TailFoe;
+    public Transform HeadPosition;
 
 	// Use this for initialization
 	void Start ()
     {
-        var preset = new FoePreset();
-        preset.SetInfo(FoeType.Red, 3, BeatType.Punch, BeatType.Kick, BeatType.Punch);
-        FoeDic.Add(FoeType.Red, preset);
-
-        preset = new FoePreset();
-        preset.SetInfo(FoeType.Green, 3, BeatType.Kick, BeatType.Kick, BeatType.Punch);
-        FoeDic.Add(FoeType.Green, preset);
-
-        preset = new FoePreset();
-        preset.SetInfo(FoeType.Blue, 3, BeatType.Kick, BeatType.Punch, BeatType.Kick);
-        FoeDic.Add(FoeType.Blue, preset);
-
-        preset = new FoePreset();
-        preset.SetInfo(FoeType.Black, 5);
-        FoeDic.Add(FoeType.Black, preset);
+        BBWorldMgr.SpawnStar();
+        BBWorldMgr.SpawnBuilding();
 
         while (FoeQueue.Count < 10)
         {
@@ -63,9 +46,39 @@ public class BBGameMgr : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if (HeadFoe)
-            HeadFoe.Rt.localPosition = new Vector3(-1800f, 0f);
+        UpdateHeadFoePosition();
 
+        HandleControl();
+
+    }
+
+    void EnqueueFoe(FoeType type)
+    {
+        var foe = BBWorldMgr.SpawnFoe(type);
+        FoeQueue.Enqueue(foe);
+
+        if (TailFoe)
+            foe.FrontFoe = TailFoe;
+        TailFoe = foe;
+    }
+
+    void UpdateHeadFoePosition()
+    {
+        if (HeadFoe == null)
+            return;
+
+        HeadFoe.PositionUpdated = false;
+
+        if (Mathf.Abs(HeadFoe.Tm.localPosition.x - HeadPosition.localPosition.x) < 0.0001f)
+            return;
+
+        float nextHeadPos = Mathf.Max(HeadFoe.Tm.localPosition.x - BBWorldMgr.Instance.Speed * Time.deltaTime, HeadPosition.localPosition.x);
+        HeadFoe.Tm.localPosition = new Vector3(nextHeadPos, 0f);
+        HeadFoe.PositionUpdated = true;
+    }
+
+    void HandleControl()
+    {
         if (Input.GetKeyDown(KeyCode.A))
         {
             OnControlled(ControlType.Left);
@@ -78,19 +91,6 @@ public class BBGameMgr : MonoBehaviour
         {
             OnControlled(ControlType.SlideRight);
         }
-	}
-
-    void EnqueueFoe(FoeType type)
-    {
-        var foeObj = Instantiate(Resources.Load("Prefabs/Foe")) as GameObject;
-        var foe = foeObj.GetComponent<BBFoe>();
-        foe.Tm.SetParent(FoeRoot, false);
-        FoeQueue.Enqueue(foe);
-        foe.InitFoe(FoeDic[type]);
-
-        if (TailFoe)
-            foe.FrontFoe = TailFoe;
-        TailFoe = foe;
     }
 
     void OnControlled(ControlType type)
