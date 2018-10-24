@@ -93,6 +93,11 @@ public class BBGameMgr : MonoBehaviour
         }
     }
 
+    static public void OnControl(ControlType type)
+    {
+        Instance.OnControlled(type);
+    }
+
     void OnControlled(ControlType type)
     {
         if (HeadFoe)

@@ -13,17 +13,21 @@ public class BBUIMgr : MonoBehaviour
     public Canvas Canvas;
     public float Height { get; private set; }
     public float Width { get; private set; }
+    public float Scale { get; private set; }
+
+    public float ScaledHeight { get { return Height * Scale; } }
+    public float ScaledWidth { get { return Width * Scale; } }
 
     // Use this for initialization
     void Start ()
     {
         if (Canvas)
         {
-            float scaleFactor = (Canvas.transform as RectTransform).rect.width / 1348f;
+            Scale = (Canvas.transform as RectTransform).rect.width / 1348f;
 
-            Canvas.GetComponent<CanvasScaler>().scaleFactor = scaleFactor;
-            Height = Canvas.pixelRect.height / scaleFactor;
-            Width = Canvas.pixelRect.width / scaleFactor;
+            Canvas.GetComponent<CanvasScaler>().scaleFactor = Scale;
+            Height = Canvas.pixelRect.height;
+            Width = Canvas.pixelRect.width;
         }
 
     }

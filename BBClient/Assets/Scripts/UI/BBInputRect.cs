@@ -6,8 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 
-public class BBInputRect : BBUI, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
-    , IBeginDragHandler, IDragHandler, IEndDragHandler
+public class BBInputRect : BBUI, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
     class ClickEvent
     {
@@ -15,7 +14,6 @@ public class BBInputRect : BBUI, IPointerClickHandler, IPointerDownHandler, IPoi
         public Vector2 ClickedPosition;
         public Vector2 LastPosition;
         public float ClickedTime;
-        public bool Dragged;
 
         public float GetDragLengthSqr
         {
@@ -28,15 +26,15 @@ public class BBInputRect : BBUI, IPointerClickHandler, IPointerDownHandler, IPoi
         public ControlType JudgeControl(float minSize)
         {
             Vector2 deltaPos = LastPosition - ClickedPosition;
-            float size = deltaPos.magnitude;
-            Debug.Log(string.Format("size : {0}", size));
-            if (size < minSize)
+            float sizeSqr = deltaPos.sqrMagnitude;
+            if (sizeSqr < minSize * minSize)
             {
                 Debug.Log("Touched");
                 //터치 판정
-                return ControlType.Left;
+                return ClickedPosition.x < MiddleX ? ControlType.Left : ControlType.Right;
             }
-
+            
+            float size = Mathf.Sqrt(sizeSqr);
             float angle = Mathf.Acos(deltaPos.x / size) * Mathf.Sign(deltaPos.y) * Mathf.Rad2Deg;
             if (angle <= 45f && angle >= -45f)
             {
@@ -71,9 +69,7 @@ public class BBInputRect : BBUI, IPointerClickHandler, IPointerDownHandler, IPoi
     public float JudgeMinSize = 20f;
     public float JudgeMaxSize = 100f;
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-    }
+    static public float MiddleX { get; private set; }
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -85,8 +81,7 @@ public class BBInputRect : BBUI, IPointerClickHandler, IPointerDownHandler, IPoi
             ID = eventData.pointerId,
             ClickedPosition = eventData.position,
             LastPosition = eventData.position,
-            ClickedTime = Time.unscaledTime,
-            Dragged = false
+            ClickedTime = Time.unscaledTime
         });
     }
 
@@ -96,12 +91,8 @@ public class BBInputRect : BBUI, IPointerClickHandler, IPointerDownHandler, IPoi
         if (clickEvent == null)
             return;
 
-        clickEvent.JudgeControl(JudgeMinSize);
+        BBGameMgr.OnControl(clickEvent.JudgeControl(JudgeMinSize));
         ClickEventList.Remove(clickEvent);
-    }
-
-    public void OnBeginDrag(PointerEventData eventData)
-    {
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -109,27 +100,25 @@ public class BBInputRect : BBUI, IPointerClickHandler, IPointerDownHandler, IPoi
         var clickEvent = ClickEventList.Find((data) => { return data.ID == eventData.pointerId; });
         if (clickEvent == null)
             return;
-
+        
         clickEvent.LastPosition = eventData.position;
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    void Start()
     {
+        MiddleX = BBUIMgr.Instance.Width * 0.5f;
     }
-
-    void Start ()
-    {
-		
-	}
 	
 	void Update ()
     {
         for (int i = 0; i < ClickEventList.Count;)
         {
-            if (Time.unscaledTime - ClickEventList[i].ClickedTime >= JudgeTime
-                 || ClickEventList[i].GetDragLengthSqr > JudgeMaxSize * JudgeMaxSize)
+            var clickEvent = ClickEventList[i];
+
+            if (Time.unscaledTime - clickEvent.ClickedTime >= JudgeTime
+                 || clickEvent.GetDragLengthSqr > JudgeMaxSize * JudgeMaxSize)
             {
-                ClickEventList[i].JudgeControl(JudgeMinSize);
+                BBGameMgr.OnControl(clickEvent.JudgeControl(JudgeMinSize));
                 ClickEventList.RemoveAt(i);
             }
             else
