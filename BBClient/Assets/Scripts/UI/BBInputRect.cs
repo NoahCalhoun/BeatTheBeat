@@ -17,30 +17,62 @@ public class BBInputRect : BBUI, IPointerClickHandler, IPointerDownHandler, IPoi
         public float ClickedTime;
         public bool Dragged;
 
-        public ControlType JudgeControl()
+        public float GetDragLengthSqr
         {
-            return ControlType.Left;
+            get
+            {
+                return (LastPosition - ClickedPosition).sqrMagnitude;
+            }
+        }
+
+        public ControlType JudgeControl(float minSize)
+        {
+            Vector2 deltaPos = LastPosition - ClickedPosition;
+            float size = deltaPos.magnitude;
+            Debug.Log(string.Format("size : {0}", size));
+            if (size < minSize)
+            {
+                Debug.Log("Touched");
+                //터치 판정
+                return ControlType.Left;
+            }
+
+            float angle = Mathf.Acos(deltaPos.x / size) * Mathf.Sign(deltaPos.y) * Mathf.Rad2Deg;
+            if (angle <= 45f && angle >= -45f)
+            {
+                Debug.Log("Slide Right");
+                return ControlType.SlideRight;
+                //오른쪽 슬라이드
+            }
+            else if (angle > 45f && angle < 135f)
+            {
+                Debug.Log("Slide Up");
+                return ControlType.SlideUp;
+                //위쪽 슬라이드
+            }
+            else if (angle < -45f && angle > -135f)
+            {
+                Debug.Log("Slide Down");
+                return ControlType.SlideDown;
+                //아래쪽 슬라이드
+            }
+            else
+            {
+                Debug.Log("Slide Left");
+                return ControlType.SlideLeft;
+                //왼쪽 슬라이드
+            }
         }
     }
 
     private List<ClickEvent> ClickEventList = new List<ClickEvent>();
 
-    private bool JudgingControl = false;
-    private Vector2 ClickedPosition;
-    private float ClickedTime;
-
-    public float JudgeTime = 0.3f;
-    public float JudgeMinSize = 50f;
-    public float JudgeMaxSize = 300f;
+    public float JudgeTime = 0.15f;
+    public float JudgeMinSize = 20f;
+    public float JudgeMaxSize = 100f;
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("Click");
-        return;
-
-        JudgingControl = true;
-        ClickedPosition = eventData.position;
-        ClickedTime = Time.unscaledTime;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -56,48 +88,6 @@ public class BBInputRect : BBUI, IPointerClickHandler, IPointerDownHandler, IPoi
             ClickedTime = Time.unscaledTime,
             Dragged = false
         });
-
-        Debug.Log("Down");
-        return;
-
-        if (JudgingControl == false)
-            return;
-
-        if (Time.unscaledTime - ClickedTime < JudgeTime)
-            return;
-
-        JudgingControl = false;
-        Vector2 deltaPos = eventData.position - ClickedPosition;
-        float size = deltaPos.magnitude;
-        Debug.Log(string.Format("size : {0}", size));
-        if (size < JudgeMinSize)
-        {
-            Debug.Log("Touched");
-            //터치 판정
-            return;
-        }
-
-        float angle = Mathf.Acos(deltaPos.x / size) * Mathf.Sign(deltaPos.y) * Mathf.Rad2Deg;
-        if (angle <= 45f && angle >= -45f)
-        {
-            Debug.Log("Slide Right");
-            //오른쪽 슬라이드
-        }
-        else if (angle > 45f && angle < 135f)
-        {
-            Debug.Log("Slide Up");
-            //위쪽 슬라이드
-        }
-        else if (angle < -45f && angle > -135f)
-        {
-            Debug.Log("Slide Down");
-            //아래쪽 슬라이드
-        }
-        else
-        {
-            Debug.Log("Slide Left");
-            //왼쪽 슬라이드
-        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -106,31 +96,25 @@ public class BBInputRect : BBUI, IPointerClickHandler, IPointerDownHandler, IPoi
         if (clickEvent == null)
             return;
 
-        Debug.Log("Up");
-        return;
-
-        if (JudgingControl == false)
-            return;
-
-        JudgingControl = false;
-        //터치 판정
-        Debug.Log("size : 0");
-        Debug.Log("Touched");
+        clickEvent.JudgeControl(JudgeMinSize);
+        ClickEventList.Remove(clickEvent);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("BeginDrag");
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("Drag");
+        var clickEvent = ClickEventList.Find((data) => { return data.ID == eventData.pointerId; });
+        if (clickEvent == null)
+            return;
+
+        clickEvent.LastPosition = eventData.position;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("EndDrag");
     }
 
     void Start ()
@@ -140,5 +124,18 @@ public class BBInputRect : BBUI, IPointerClickHandler, IPointerDownHandler, IPoi
 	
 	void Update ()
     {
+        for (int i = 0; i < ClickEventList.Count;)
+        {
+            if (Time.unscaledTime - ClickEventList[i].ClickedTime >= JudgeTime
+                 || ClickEventList[i].GetDragLengthSqr > JudgeMaxSize * JudgeMaxSize)
+            {
+                ClickEventList[i].JudgeControl(JudgeMinSize);
+                ClickEventList.RemoveAt(i);
+            }
+            else
+            {
+                ++i;
+            }
+        }
 	}
 }
