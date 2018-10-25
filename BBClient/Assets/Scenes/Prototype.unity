@@ -425,9 +425,10 @@ GameObject:
   - component: {fileID: 836378266}
   - component: {fileID: 836378265}
   - component: {fileID: 836378268}
+  - component: {fileID: 836378269}
   m_Layer: 0
   m_Name: World Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -504,6 +505,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Material: {fileID: 2100000, guid: 1a986834c24a34447b0225910543612a, type: 2}
+--- !u!114 &836378269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 836378264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bb5759a0cfe495438c62dbd11a258a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1142089348
 GameObject:
   m_ObjectHideFlags: 0
@@ -875,6 +887,7 @@ GameObject:
   - component: {fileID: 1944401055}
   - component: {fileID: 1944401052}
   - component: {fileID: 1944401056}
+  - component: {fileID: 1944401057}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: GameManager
@@ -945,6 +958,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5a9de1287cbb2749940431ac045869d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1944401057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1944401051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f78eac893b80cb4692e1d92c793ac6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RadialBlur: {fileID: 836378268}
+  RGBSeparate: {fileID: 836378269}
 --- !u!1 &1954080514
 GameObject:
   m_ObjectHideFlags: 0
