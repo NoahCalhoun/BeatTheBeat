@@ -10,7 +10,7 @@ public class BBPostEffect_RadialBlur : MonoBehaviour
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
         Material.SetTexture("_MainTex", source);
-        Material.SetFloat("fSampleDist", 1f);
+        Material.SetFloat("fSampleDist", 0.5f);
         Material.SetFloat("fSampleStrength", 2.2f);
         Material.SetFloat("fCenterU", 0.25f);
         Material.SetFloat("fCenterV", 0.25f);

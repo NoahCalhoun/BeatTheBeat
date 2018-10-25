@@ -585,7 +585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55564a5678b475647a1124e456a56fa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JudgeTime: 0.3
+  JudgeTime: 0.07
   JudgeMinSize: 20
   JudgeMaxSize: 100
 --- !u!114 &1242153227

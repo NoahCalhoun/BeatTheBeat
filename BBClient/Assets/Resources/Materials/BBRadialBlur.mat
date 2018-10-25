@@ -78,7 +78,7 @@ Material:
     - _ZWrite: 1
     - fCenterU: 0.25
     - fCenterV: 0.25
-    - fSampleDist: 1
+    - fSampleDist: 0.5
     - fSampleStrength: 2.2
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
