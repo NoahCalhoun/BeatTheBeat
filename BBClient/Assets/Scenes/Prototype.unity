@@ -424,6 +424,7 @@ GameObject:
   - component: {fileID: 836378267}
   - component: {fileID: 836378266}
   - component: {fileID: 836378265}
+  - component: {fileID: 836378268}
   m_Layer: 0
   m_Name: World Camera
   m_TagString: Untagged
@@ -491,6 +492,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &836378268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 836378264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e58eafd9d1780a8439b38ac4c4765136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Material: {fileID: 2100000, guid: 1a986834c24a34447b0225910543612a, type: 2}
 --- !u!1 &1142089348
 GameObject:
   m_ObjectHideFlags: 0
@@ -573,7 +586,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   JudgeTime: 0.3
-  JudgeSize: 100
+  JudgeMinSize: 20
+  JudgeMaxSize: 100
 --- !u!114 &1242153227
 MonoBehaviour:
   m_ObjectHideFlags: 0

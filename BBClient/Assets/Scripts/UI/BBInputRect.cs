@@ -106,7 +106,7 @@ public class BBInputRect : BBUI, IPointerDownHandler, IPointerUpHandler, IDragHa
 
     void Start()
     {
-        MiddleX = BBUIMgr.Instance.Width * 0.5f;
+        MiddleX = Rt.rect.width * 0.5f;//BBUIMgr.Instance.Width * 0.5f;
     }
 	
 	void Update ()
