@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 
 public class BBInputRect : BBUI, IPointerDownHandler, IPointerUpHandler, IDragHandler
@@ -30,7 +28,6 @@ public class BBInputRect : BBUI, IPointerDownHandler, IPointerUpHandler, IDragHa
             if (sizeSqr < minSize * minSize)
             {
                 Debug.Log("Touched");
-                //터치 판정
                 return ClickedPosition.x < MiddleX ? ControlType.Left : ControlType.Right;
             }
             
@@ -40,25 +37,21 @@ public class BBInputRect : BBUI, IPointerDownHandler, IPointerUpHandler, IDragHa
             {
                 Debug.Log("Slide Right");
                 return ControlType.SlideRight;
-                //오른쪽 슬라이드
             }
             else if (angle > 45f && angle < 135f)
             {
                 Debug.Log("Slide Up");
                 return ControlType.SlideUp;
-                //위쪽 슬라이드
             }
             else if (angle < -45f && angle > -135f)
             {
                 Debug.Log("Slide Down");
                 return ControlType.SlideDown;
-                //아래쪽 슬라이드
             }
             else
             {
                 Debug.Log("Slide Left");
                 return ControlType.SlideLeft;
-                //왼쪽 슬라이드
             }
         }
     }
@@ -106,7 +99,7 @@ public class BBInputRect : BBUI, IPointerDownHandler, IPointerUpHandler, IDragHa
 
     void Start()
     {
-        MiddleX = Rt.rect.width * 0.5f;//BBUIMgr.Instance.Width * 0.5f;
+        MiddleX = Rt.rect.width * 0.5f;
     }
 	
 	void Update ()
